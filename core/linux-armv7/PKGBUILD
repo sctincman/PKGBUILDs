@@ -43,7 +43,7 @@ md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
          'a43cc24e0fc27caf96b03a7895dc6543'
          '47a9efe2f0114b099662706a5c4d45e5'
          'cc8885354fd6ce2bb63722a34c4d383a'
-         'f72ad1787d579a2eb26e19ac46659559'
+	 'c156e6ec1a2a9aad6055963a456d5e88'
          '1813b39074d01af6548951764a0f6444'
          'cb2cdd34d6ea18a1411045413d8d18ef'
          '61c5ff73c136ed07a7aadbf58db3d96a'
@@ -370,7 +370,7 @@ _package-chromebook() {
   cp vmlinux.kpart "${pkgdir}/boot"
 }
 
-pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-smileplug" "${pkgbase}-mirabox" "${pkgbase}-ax3" "${pkgbase}-d3plug" "${pkgbase}-cubox" "${pkgbase}-chromebook")
+pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-chromebook")
 for _p in ${pkgname[@]}; do
   eval "package_${_p}() {
     _package${_p#${pkgbase}}
