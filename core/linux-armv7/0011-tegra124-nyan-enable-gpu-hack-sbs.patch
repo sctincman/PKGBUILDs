@@ -1,0 +1,36 @@
+diff -Naur linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi linux-4.4.new/arch/arm/boot/dts/tegra124-nyan.dtsi
+--- linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-10 16:01:32.000000000 -0700
++++ linux-4.4.new/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-13 20:53:01.662025153 -0700
+@@ -38,6 +38,15 @@
+ 		};
+ 	};
+ 
++	gpu@0,57000000 {
++		/*
++		 * Node left disabled on purpose - the bootloader will enable
++		 * it after having set the VPR up
++		 */
++		vdd-supply = <&vdd_gpu>;
++		status = "okay";
++	};
++
+ 	serial@0,70006000 {
+ 		/* Debug connector on the bottom of the board near SD card. */
+ 		status = "okay";
+@@ -210,7 +219,7 @@
+ 					regulator-always-on;
+ 				};
+ 
+-				sd6 {
++				vdd_gpu: sd6 {
+ 					regulator-name = "+VDD_GPU_AP";
+ 					regulator-min-microvolt = <650000>;
+ 					regulator-max-microvolt = <1200000>;
+@@ -332,7 +341,6 @@
+ 					reg = <0xb>;
+ 					sbs,i2c-retry-count = <2>;
+ 					sbs,poll-retry-count = <10>;
+-					power-supplies = <&charger>;
+ 				};
+ 			};
+ 		};

@@ -1,0 +1,15 @@
+diff -Naur linux-4.4/arch/arm/boot/dts/tegra124-nyan-big.dts linux-4.4.new/arch/arm/boot/dts/tegra124-nyan-big.dts
+--- linux-4.4/arch/arm/boot/dts/tegra124-nyan-big.dts	2016-01-10 16:01:32.000000000 -0700
++++ linux-4.4.new/arch/arm/boot/dts/tegra124-nyan-big.dts	2016-01-13 23:14:43.712236678 -0700
+@@ -6,7 +6,10 @@
+ 
+ / {
+ 	model = "Acer Chromebook 13 CB5-311";
+-	compatible = "google,nyan-big", "nvidia,tegra124";
++	compatible = "google,nyan-big-rev7", "google,nyan-big-rev6",
++			"google,nyan-big-rev5", "google,nyan-big-rev4",
++			"google,nyan-big-rev3", "google,nyan-big",
++			"google,nyan", "nvidia,tegra124";
+ 
+ 	panel: panel {
+ 		compatible = "auo,b133xtn01";

@@ -1,0 +1,13 @@
+--- linux-4.4.new/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-13 20:53:01.662025153 -0700
++++ linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-21 00:48:29.975323072 -0700
+@@ -684,8 +684,8 @@
+ 
+ 	sound {
+ 		nvidia,audio-routing =
+-			"Headphones", "HPR",
+-			"Headphones", "HPL",
++			"Headphone Jack", "HPR",
++			"Headphone Jack", "HPL",
+ 			"Speakers", "SPKR",
+ 			"Speakers", "SPKL",
+ 			"Mic Jack", "MICBIAS",

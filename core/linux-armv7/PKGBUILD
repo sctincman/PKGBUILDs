@@ -27,6 +27,10 @@ source=("http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         '0007-set-default-cubietruck-led-triggers.patch'
         '0008-USB-armory-support.patch'
         '0009-ARM-dts-dove-add-Dove-divider-clocks.patch'
+	'0010-tegra124-nyan-compat-strings.patch'
+	'0011-tegra124-nyan-enable-gpu-hack-sbs.patch'
+	'0012-tegra-max-correct-headphone-detect.patch'
+	'0013-match-headphone-sink-nyan-dtsi.patch'
         'kernel-CVE-2016-0728.patch'
         'config'
         'cmdline'
@@ -44,8 +48,12 @@ md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
          'a43cc24e0fc27caf96b03a7895dc6543'
          '47a9efe2f0114b099662706a5c4d45e5'
          'cc8885354fd6ce2bb63722a34c4d383a'
+	 '282579e200cd6853e2e494f3997bedde'
+	 'e7b13d58226e98e8e93da6848ed0858e'
+	 '8160214df9d5371baf685e3fdf00f7b6'
+	 '0c926529a5bde2917cd945bbc34e160f'
          '6470e9783bd1c7a8feddc2d67f07afd5'
-         '1ade3cc78bb63e42f7d19b99f8813dda'
+	 '49f00bb46fd339bdd8e9785ecde5dd83'
          '1813b39074d01af6548951764a0f6444'
          'cb2cdd34d6ea18a1411045413d8d18ef'
          '61c5ff73c136ed07a7aadbf58db3d96a'
@@ -71,6 +79,12 @@ prepare() {
   git apply ../0008-USB-armory-support.patch
   git apply ../0009-ARM-dts-dove-add-Dove-divider-clocks.patch
   git apply ../kernel-CVE-2016-0728.patch
+
+  # Nyan patches
+  patch -p1 < ../0010-tegra124-nyan-compat-strings.patch
+  patch -p1 < ../0011-tegra124-nyan-enable-gpu-hack-sbs.patch
+  patch -p1 < ../0012-tegra-max-correct-headphone-detect.patch
+  patch -p1 < ../0013-match-headphone-sink-nyan-dtsi.patch
 
   cat "${srcdir}/config" > ./.config
 
