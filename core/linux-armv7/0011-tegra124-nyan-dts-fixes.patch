@@ -1,0 +1,47 @@
+--- ./linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi.orig	2016-01-25 20:16:20.619435348 -0700
++++ ./linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-25 20:58:21.168239469 -0700
+@@ -38,6 +38,11 @@
+ 		};
+ 	};
+ 
++	gpu@0,57000000 {
++		vdd-supply = <&vdd_gpu>;
++		status = "okay";
++	};
++
+ 	serial@0,70006000 {
+ 		/* Debug connector on the bottom of the board near SD card. */
+ 		status = "okay";
+@@ -210,7 +215,7 @@
+ 					regulator-always-on;
+ 				};
+ 
+-				sd6 {
++				vdd_gpu: sd6 {
+ 					regulator-name = "+VDD_GPU_AP";
+ 					regulator-min-microvolt = <650000>;
+ 					regulator-max-microvolt = <1200000>;
+@@ -321,10 +326,11 @@
+ 					reg = <0x9>;
+ 					interrupt-parent = <&gpio>;
+ 					interrupts = <TEGRA_GPIO(J, 0)
+-							GPIO_ACTIVE_HIGH>;
++							IRQ_TYPE_EDGE_BOTH>;
+ 					ti,ac-detect-gpios = <&gpio
+ 							TEGRA_GPIO(J, 0)
+ 							GPIO_ACTIVE_HIGH>;
++					ti,external-control;
+ 				};
+ 
+ 				battery: sbs-battery@b {
+@@ -676,8 +682,8 @@
+ 
+ 	sound {
+ 		nvidia,audio-routing =
+-			"Headphones", "HPR",
+-			"Headphones", "HPL",
++			"Headphone Jack", "HPR",
++			"Headphone Jack", "HPL",
+ 			"Speakers", "SPKR",
+ 			"Speakers", "SPKL",
+ 			"Mic Jack", "MICBIAS",
