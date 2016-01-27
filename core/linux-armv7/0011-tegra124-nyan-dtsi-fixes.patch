@@ -1,5 +1,5 @@
---- ./linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi.orig	2016-01-25 20:16:20.619435348 -0700
-+++ ./linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-25 20:58:21.168239469 -0700
+--- linux-4.4/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-10 16:01:32.000000000 -0700
++++ linux-4.4.new/arch/arm/boot/dts/tegra124-nyan.dtsi	2016-01-25 20:58:21.168239469 -0700
 @@ -38,6 +38,11 @@
  		};
  	};

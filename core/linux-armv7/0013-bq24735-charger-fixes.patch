@@ -1,5 +1,5 @@
---- ./linux-4.4/drivers/power/bq24735-charger.c.orig	2016-01-25 19:22:14.208011884 -0700
-+++ ./linux-4.4/drivers/power/bq24735-charger.c	2016-01-25 19:22:32.437829828 -0700
+--- a/drivers/power/bq24735-charger.c	2016-01-25 19:22:14.208011884 -0700
++++ b/drivers/power/bq24735-charger.c	2016-01-25 19:22:32.437829828 -0700
 @@ -90,6 +90,9 @@
  
  static inline int bq24735_enable_charging(struct bq24735 *charger)
@@ -103,3 +103,14 @@
  	ret = bq24735_config_charger(charger);
  	if (ret < 0) {
  		dev_err(&client->dev, "failed in configuring charger");
+--- linux-4.4/include/linux/power/bq24735-charger.h.orig	2016-01-10 16:01:32.000000000 -0700
++++ linux-4.4/include/linux/power/bq24735-charger.h	2016-01-27 10:12:47.656860806 -0700
+@@ -32,6 +32,8 @@
+ 	int status_gpio_active_low;
+ 	bool status_gpio_valid;
+ 
++	bool ext_control;
++
+ 	char **supplied_to;
+ 	size_t num_supplicants;
+ };

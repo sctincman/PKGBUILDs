@@ -1,6 +1,6 @@
 diff -Naur linux-4.4/sound/soc/tegra/tegra_max98090.c linux-4.4.new/sound/soc/tegra/tegra_max98090.c
---- linux-4.4/sound/soc/tegra/tegra_max98090.c	2016-01-10 16:01:32.000000000 -0700
-+++ linux-4.4.new/sound/soc/tegra/tegra_max98090.c	2016-01-20 17:29:31.202294069 -0700
+--- a/sound/soc/tegra/tegra_max98090.c	2016-01-10 16:01:32.000000000 -0700
++++ b/sound/soc/tegra/tegra_max98090.c	2016-01-20 17:29:31.202294069 -0700
 @@ -101,7 +101,7 @@
  
  static struct snd_soc_jack_pin tegra_max98090_hp_jack_pins[] = {
