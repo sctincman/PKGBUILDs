@@ -31,6 +31,7 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         '0006-ARM-TLV320AIC23-SoC-Audio-Codec-Fix-errors-reported-.patch'
         '0007-set-default-cubietruck-led-triggers.patch'
         '0008-USB-armory-support.patch'
+	'0009-tegra-devfreq-fix-target.patch'
 	'0010-tegra124-nyan-big-compat-strings.patch'
 	'0011-tegra124-nyan-dtsi-fixes.patch'
 	'0012-tegra-max-correct-headphone-detect.patch'
@@ -50,6 +51,7 @@ md5sums=('22d3f0907983f0c90f5029fca541ff78'
          '15a9ab8c8c2446778a29789e9415deb8'
          '82821ac063e3426d19f5e63265cc3887'
          'fcdc94a493f2c6cdfdaa7cedf997e858'
+	 'd778f842d393d662e2c733f2609826bf'
          'efc1c989bc2fddc757b89c202f325540'
          '38ff36270d92d7aead8e90a5471ffb21'
          '229b1ae06bdc363f9838cc44111fa4c7'
@@ -80,6 +82,7 @@ prepare() {
   git apply ../0008-USB-armory-support.patch
 
   # Nyan patches
+  patch -p1 < ../0009-tegra-devfreq-fix-target.patch
   patch -p1 < ../0010-tegra124-nyan-big-compat-strings.patch
   patch -p1 < ../0011-tegra124-nyan-dtsi-fixes.patch
   patch -p1 < ../0012-tegra-max-correct-headphone-detect.patch
