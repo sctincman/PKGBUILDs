@@ -1,0 +1,10 @@
+--- a/arch/arm/boot/dts/tegra124.dtsi	2016-01-28 11:29:28.949925508 -0700
++++ b/arch/arm/boot/dts/tegra124.dtsi	2016-01-28 11:33:21.055877618 -0700
+@@ -308,6 +308,7 @@
+ 		compatible = "nvidia,tegra124-apbmisc", "nvidia,tegra20-apbmisc";
+ 		reg = <0x0 0x70000800 0x0 0x64>,   /* Chip revision */
+ 		      <0x0 0x7000e864 0x0 0x04>;   /* Strapping options */
++		nvidia,long-ram-code; /* TRM specifies 4-bits for K1 */
+ 	};
+ 
+ 	pinmux: pinmux@0,70000868 {

@@ -36,6 +36,7 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
 	'0011-tegra124-nyan-dtsi-fixes.patch'
 	'0012-tegra-max-correct-headphone-detect.patch'
 	'0013-bq24735-charger-fixes.patch'
+	'0014-tegra124-set-long-ram-code.patch'
         'config'
         'cmdline'
         'kernel.its'
@@ -56,6 +57,7 @@ md5sums=('22d3f0907983f0c90f5029fca541ff78'
          '38ff36270d92d7aead8e90a5471ffb21'
          '229b1ae06bdc363f9838cc44111fa4c7'
          '7309ebba9c3f551ccd71196a439eb9f8'
+	 'f5be9af61fc268dca3eb79d16b6ef87f'
          'ba5f12fc0d2d140421529640fc52d700'
          '1813b39074d01af6548951764a0f6444'
          '4f2379ed84258050edb858ee8d281678'
@@ -87,6 +89,7 @@ prepare() {
   patch -p1 < ../0011-tegra124-nyan-dtsi-fixes.patch
   patch -p1 < ../0012-tegra-max-correct-headphone-detect.patch
   patch -p1 < ../0013-bq24735-charger-fixes.patch
+  patch -p1 < ../0014-tegra124-set-long-ram-code.patch
 
   cat "${srcdir}/config" > ./.config
 
