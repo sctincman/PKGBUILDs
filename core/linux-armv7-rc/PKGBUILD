@@ -4,7 +4,7 @@
 buildarch=4
 
 _rcver=4.5
-_rcrel=1
+_rcrel=2
 _rcnrel=armv7-x0
 
 pkgbase=linux-armv7-rc
@@ -43,8 +43,8 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'kernel.its'
         'kernel.keyblock'
         'kernel_data_key.vbprivk')
-md5sums=('22d3f0907983f0c90f5029fca541ff78'
-         '7e987231c67207a53286f9bf4035ca4e'
+md5sums=('9babc43f354354285a2f62fe091be38d'
+         'e0dff94537a55bc3cd1cd7e0c5a7fb3d'
          '961fa2a54f528b43dcb81ba2a25d7b70'
          '3af7a357c66bef25efdf53d8a56f4e55'
          'be5dfa1c765ab00da3c47e4a334e5701'
@@ -53,14 +53,14 @@ md5sums=('22d3f0907983f0c90f5029fca541ff78'
          '15a9ab8c8c2446778a29789e9415deb8'
          '82821ac063e3426d19f5e63265cc3887'
          'fcdc94a493f2c6cdfdaa7cedf997e858'
-	 'd778f842d393d662e2c733f2609826bf'
+         'd778f842d393d662e2c733f2609826bf'
          'efc1c989bc2fddc757b89c202f325540'
          '38ff36270d92d7aead8e90a5471ffb21'
          '229b1ae06bdc363f9838cc44111fa4c7'
          '7309ebba9c3f551ccd71196a439eb9f8'
-	 'f5be9af61fc268dca3eb79d16b6ef87f'
-	 '1730f107ecc1f7f311055fdfbac75236'
-         'ba5f12fc0d2d140421529640fc52d700'
+         'f5be9af61fc268dca3eb79d16b6ef87f'
+         '1730f107ecc1f7f311055fdfbac75236'
+         '60a4cd812bd3c31d5bc7249e946a3d83'
          '1813b39074d01af6548951764a0f6444'
          '4f2379ed84258050edb858ee8d281678'
          '61c5ff73c136ed07a7aadbf58db3d96a'
@@ -386,4 +386,3 @@ for _p in ${pkgname[@]}; do
     _package${_p#${pkgbase}}
   }"
 done
-
