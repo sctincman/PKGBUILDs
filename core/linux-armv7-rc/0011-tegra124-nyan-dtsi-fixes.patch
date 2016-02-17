@@ -34,14 +34,3 @@
  				};
  
  				battery: sbs-battery@b {
-@@ -676,8 +682,8 @@
- 
- 	sound {
- 		nvidia,audio-routing =
--			"Headphones", "HPR",
--			"Headphones", "HPL",
-+			"Headphone Jack", "HPR",
-+			"Headphone Jack", "HPL",
- 			"Speakers", "SPKR",
- 			"Speakers", "SPKL",
- 			"Mic Jack", "MICBIAS",
