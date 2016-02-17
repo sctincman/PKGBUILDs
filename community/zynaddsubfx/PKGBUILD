@@ -5,11 +5,11 @@
 # Contributor: DonVla <donvla@users.sourceforge.net>
 
 # ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
-#  - patch to remove hardcoded sse flags
+#  - don't build with neon (-DNoNeonPlease=1)
 
 pkgname=zynaddsubfx
-pkgver=2.5.2
-pkgrel=2
+pkgver=2.5.3
+pkgrel=1.1
 pkgdesc="Opensource software synthesizer capable of making a countless number of instruments."
 arch=('i686' 'x86_64')
 url="http://zynaddsubfx.sourceforge.net"
@@ -17,18 +17,10 @@ license=('GPL')
 depends=('fltk' 'portaudio' 'fftw' 'lash' 'mxml' 'jack' 'libxpm' 'gcc-libs' 'liblo')
 makedepends=('cmake' 'pkgconfig' 'mesa' 'setconf' 'gendesk')
 options=('!emptydirs')
-source=("https://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
-	"$pkgname.svg"
-        '0001-no_sse_generic.patch')
-md5sums=('c0d09b8e8d79691e79e7d424bc4f0263'
-         '6f7e9c3ce3947088a10c99c46a65431f'
-         'f52766f4dd6098269999f33cd18bedf1')
-
-prepare() {
-  cd "zynaddsubfx-$pkgver"
-
-  patch -p1 -i ../0001-no_sse_generic.patch
-}
+source=("https://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2"
+	"$pkgname.svg")
+md5sums=('05cd7e8aa99d502913ce4bc09712abb8'
+         '6f7e9c3ce3947088a10c99c46a65431f')
 
 build() {
   cd "$srcdir"
@@ -45,6 +37,7 @@ build() {
     -DDefaultOutput=jack \
     -DDefaultInput=jack \
     -DGuiModule=fltk \
+    -DNoNeonPlease=1 \
     ..
   make
 

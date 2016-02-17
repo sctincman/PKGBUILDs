@@ -1,7 +1,9 @@
-From 23567fd052a9abb6d67fe8e7a9ccdd9800a540f2 Mon Sep 17 00:00:00 2001
+From 7ffe3b6e83dd235fbc3608d19bfadca7ecceb46e Mon Sep 17 00:00:00 2001
 From: Yevgeny Pats <yevgeny@perception-point.io>
 Date: Tue, 19 Jan 2016 22:09:04 +0000
-Subject: KEYS: Fix keyring ref leak in join_session_keyring()
+Subject: [PATCH 2/2] KEYS: Fix keyring ref leak in join_session_keyring()
+
+commit 23567fd052a9abb6d67fe8e7a9ccdd9800a540f2 upstream.
 
 This fixes CVE-2016-0728.
 
@@ -60,15 +62,16 @@ Acked-by: Don Zickus <dzickus@redhat.com>
 Acked-by: Prarit Bhargava <prarit@redhat.com>
 Acked-by: Jarod Wilson <jarod@redhat.com>
 Signed-off-by: James Morris <james.l.morris@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
  security/keys/process_keys.c | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
-index a3f85d2..e6d50172 100644
+index 0cf8a13..4e56371 100644
 --- a/security/keys/process_keys.c
 +++ b/security/keys/process_keys.c
-@@ -794,6 +794,7 @@ long join_session_keyring(const char *name)
+@@ -793,6 +793,7 @@ long join_session_keyring(const char *name)
  		ret = PTR_ERR(keyring);
  		goto error2;
  	} else if (keyring == new->session_keyring) {
@@ -77,5 +80,5 @@ index a3f85d2..e6d50172 100644
  		goto error2;
  	}
 -- 
-cgit v0.12
+2.7.0
 

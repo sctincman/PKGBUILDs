@@ -6,9 +6,9 @@ pkgname=('raspberrypi-firmware'
          'raspberrypi-firmware-bootloader-x'
          'raspberrypi-firmware-tools'
          'raspberrypi-firmware-examples')
-pkgver=20160201
+pkgver=20160216
 pkgrel=1
-_commit=cb2ffaa5503ac53039d40715965480dd66f0aa20
+_commit=fa931b468e18df9be6a379991a0d74264dc3e4c7
 pkgdesc="Firmware files for Raspberry Pi"
 arch=('any')
 url="https://github.com/raspberrypi/firmware"
@@ -16,7 +16,7 @@ makedepends=('git')
 license=('custom')
 options=(!strip)
 source=("https://github.com/raspberrypi/firmware/archive/${_commit}.tar.gz")
-md5sums=('791437b47bce05af263c565c1d430229')
+md5sums=('3554c46aa9ab9fd145059932165c32ba')
 
 package_raspberrypi-firmware() {
   depends=('raspberrypi-firmware-bootloader'
