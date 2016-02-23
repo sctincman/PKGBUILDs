@@ -4,8 +4,6 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 # NOTE: valgrind requires rebuilt with each major glibc version
 
-# NOTE: adjust version in install script when locale files are updated
-
 # ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
 # - Patch for ld-linux-armhf.so.3 transition and symlink ld-linux.so.3
 # - Patch for hard-float ld.so.cache transition
@@ -15,49 +13,42 @@
 noautobuild=1
 
 pkgname=glibc
-pkgver=2.22
-pkgrel=3
+pkgver=2.23
+pkgrel=1
+_commit=e742928c
 pkgdesc="GNU C Library"
 arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
 groups=('base')
 depends=('linux-api-headers>=4.1' 'tzdata' 'filesystem')
-makedepends=('gcc>=5.2')
+makedepends=('gcc>=5.2' 'git')
 backup=(etc/gai.conf
         etc/locale.gen
         etc/nscd.conf)
 options=('!strip' 'staticlibs' '!distcc')
 install=glibc.install
-source=(http://ftp.gnu.org/gnu/libc/${pkgname}-${pkgver}.tar.xz{,.sig}
+source=(git://sourceware.org/git/glibc.git#commit=${_commit}
         local-soname-hack.diff
-        glibc-2.22-roundup.patch
         locale.gen.txt
         locale-gen)
-md5sums=('e51e02bf552a0a1fbbdc948fb2f5e83c'
-         'SKIP'
+md5sums=('SKIP'
          '905370139382428ef2b97b247c0970bf'
-         'b6b7a0e8d6e6520e40e3164ae773631d'
          '07ac979b6ab5eeb778d55f041529d623'
          '476e9113489f93b348b21e144b6a8fcf')
-validpgpkeys=('F37CDAB708E65EA183FD1AF625EF0A436C2A4AFF')  # Carlos O'Donell
 
 prepare() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  mkdir glibc-build
 
-  # glibc-2.21..01b07c70
-  patch -p1 -i $srcdir/glibc-2.22-roundup.patch
-
+  cd ${pkgname}
   # ALARM: patch for hard-float ld-linux soname
   if [[ $CARCH == "armv6h" || $CARCH == "armv7h" ]]; then
     patch -p1 -i ${srcdir}/local-soname-hack.diff
   fi
-
-  mkdir ${srcdir}/glibc-build
 }
 
 build() {
-  cd ${srcdir}/glibc-build
+  cd glibc-build
 
   # ALARM: Specify build host types
   [[ $CARCH == "arm" ]] && CONFIGFLAG="--host=armv5tel-unknown-linux-gnueabi --build=armv5tel-unknown-linux-gnueabi"
@@ -77,7 +68,7 @@ build() {
   # enable unwinding tables so that gdb can unwind the standard functions
   CFLAGS+=" -funwind-tables"
 
-  ${srcdir}/${pkgname}-${pkgver}/configure --prefix=/usr \
+  ../${pkgname}/configure --prefix=/usr \
       --libdir=/usr/lib --libexecdir=/usr/lib \
       --with-headers=/usr/include \
       --with-bugurl=https://github.com/archlinuxarm/PKGBUILDs/issues \
@@ -94,7 +85,7 @@ build() {
   # build libraries with hardening disabled
   echo "build-programs=no" >> configparms
   make
-  
+
   # re-enable hardening for programs
   sed -i "/build-programs=/s#no#yes#" configparms
   echo "CC += -fstack-protector -D_FORTIFY_SOURCE=2" >> configparms
@@ -102,18 +93,18 @@ build() {
   make
 
   # remove harding in preparation to run test-suite
-  sed -i '5,7d' configparms
+  sed -i '/FORTIFY/d' configparms
 }
 
 check() {
-  cd ${srcdir}/glibc-build
+  cd glibc-build
 
   # some failures are "expected"
   make check || true
 }
 
 package() {
-  cd ${srcdir}/glibc-build
+  cd glibc-build
 
   install -dm755 ${pkgdir}/etc
   touch ${pkgdir}/etc/ld.so.conf
@@ -124,26 +115,18 @@ package() {
 
   install -dm755 ${pkgdir}/usr/lib/{locale,systemd/system,tmpfiles.d}
 
-  install -m644 ${srcdir}/${pkgname}-${pkgver}/nscd/nscd.conf ${pkgdir}/etc/nscd.conf
-  install -m644 ${srcdir}/${pkgname}-${pkgver}/nscd/nscd.service ${pkgdir}/usr/lib/systemd/system
-  install -m644 ${srcdir}/${pkgname}-${pkgver}/nscd/nscd.tmpfiles ${pkgdir}/usr/lib/tmpfiles.d/nscd.conf
+  install -m644 ${srcdir}/${pkgname}/nscd/nscd.conf ${pkgdir}/etc/nscd.conf
+  install -m644 ${srcdir}/${pkgname}/nscd/nscd.service ${pkgdir}/usr/lib/systemd/system
+  install -m644 ${srcdir}/${pkgname}/nscd/nscd.tmpfiles ${pkgdir}/usr/lib/tmpfiles.d/nscd.conf
 
-  install -m644 ${srcdir}/${pkgname}-${pkgver}/posix/gai.conf ${pkgdir}/etc/gai.conf
+  install -m644 ${srcdir}/${pkgname}/posix/gai.conf ${pkgdir}/etc/gai.conf
 
   install -m755 ${srcdir}/locale-gen ${pkgdir}/usr/bin
 
   # create /etc/locale.gen
   install -m644 ${srcdir}/locale.gen.txt ${pkgdir}/etc/locale.gen
   sed -e '1,3d' -e 's|/| |g' -e 's|\\| |g' -e 's|^|#|g' \
-    ${srcdir}/glibc-${pkgver}/localedata/SUPPORTED >> ${pkgdir}/etc/locale.gen
-
-  # remove the static libraries that have a shared counterpart
-  # libc, libdl, libm and libpthread are required for toolchain testsuites
-  # in addition libcrypt appears widely required
-  rm $pkgdir/usr/lib/lib{anl,BrokenLocale,nsl,resolv,rt,util}.a
-  if [[ $CARCH = "x86_64" ]]; then
-    rm $pkgdir/usr/lib/libmvec.a
-  fi
+    ${srcdir}/glibc/localedata/SUPPORTED >> ${pkgdir}/etc/locale.gen
 
   # ALARM: symlink ld-linux.so.3 for hard-float
   [[ $CARCH == "armv6h" || $CARCH == "armv7h" ]] && ln -s /lib/ld-${pkgver}.so ${pkgdir}/usr/lib/ld-linux.so.3
