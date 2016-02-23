@@ -1,12 +1,30 @@
-diff -Naur linux-4.4/sound/soc/tegra/tegra_max98090.c linux-4.4.new/sound/soc/tegra/tegra_max98090.c
---- a/sound/soc/tegra/tegra_max98090.c	2016-01-10 16:01:32.000000000 -0700
-+++ b/sound/soc/tegra/tegra_max98090.c	2016-01-20 17:29:31.202294069 -0700
-@@ -110,7 +110,7 @@
- 	.name = "Headphone detection",
- 	.report = SND_JACK_HEADPHONE,
- 	.debounce_time = 150,
--	.invert = 1,
-+	.invert = 0,
+diff --git a/sound/soc/tegra/tegra_max98090.c b/sound/soc/tegra/tegra_max98090.c
+index 49b95c7..902da36 100644
+--- a/sound/soc/tegra/tegra_max98090.c
++++ b/sound/soc/tegra/tegra_max98090.c
+@@ -42,7 +42,6 @@
+ struct tegra_max98090 {
+ 	struct tegra_asoc_utils_data util_data;
+ 	int gpio_hp_det;
+-	enum of_gpio_flags gpio_hp_det_flags;
+ 	int gpio_mic_det;
  };
  
- static struct snd_soc_jack tegra_max98090_mic_jack;
+@@ -156,7 +155,6 @@ static int tegra_max98090_asoc_init(struct snd_soc_pcm_runtime *rtd)
+ 				      ARRAY_SIZE(tegra_max98090_hp_jack_pins));
+ 
+ 		tegra_max98090_hp_jack_gpio.gpio = machine->gpio_hp_det;
+-		tegra_max98090_hp_jack_gpio.invert = (machine->gpio_hp_det_flags & OF_GPIO_ACTIVE_LOW);
+ 		snd_soc_jack_add_gpios(&tegra_max98090_hp_jack,
+ 					1,
+ 					&tegra_max98090_hp_jack_gpio);
+@@ -236,8 +234,7 @@ static int tegra_max98090_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, card);
+ 	snd_soc_card_set_drvdata(card, machine);
+ 
+-	machine->gpio_hp_det = of_get_named_gpio_flags(
+-                np, "nvidia,hp-det-gpios", 0, &machine->gpio_hp_det_flags);
++	machine->gpio_hp_det = of_get_named_gpio(np, "nvidia,hp-det-gpios", 0);
+ 	if (machine->gpio_hp_det == -EPROBE_DEFER)
+ 		return -EPROBE_DEFER;
+ 
