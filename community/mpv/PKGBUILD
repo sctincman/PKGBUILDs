@@ -1,14 +1,14 @@
 # $Id$
 # Maintainer: Christian Hesse <mail@eworm.de>
-# Contributor:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Eivind Uggedal <eivind@uggedal.com>
 
 # ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
-#  - armv7 needs to be built with fPIC
+#  - armv7/aarch64 needs to be built with fPIC
 
 pkgname=mpv
 epoch=1
-pkgver=0.15.0
+pkgver=0.16.0
 pkgrel=1
 pkgdesc='Video player based on MPlayer/mplayer2'
 arch=('i686' 'x86_64')
@@ -18,14 +18,14 @@ depends=(
   'ffmpeg' 'lcms2' 'libcdio-paranoia' 'libgl' 'enca' 'libxss'
   'libxinerama' 'libxv' 'libxkbcommon' 'libva' 'wayland' 'libcaca'
   'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'lua52' 'libdvdnav'
-  'libguess' 'libxrandr' 'jack' 'smbclient' 'rubberband'
+  'libxrandr' 'jack' 'smbclient' 'rubberband'
 )
 makedepends=('mesa' 'python-docutils' 'ladspa' 'hardening-wrapper' 'git')
 optdepends=('youtube-dl: for video-sharing websites playback')
 options=('!emptydirs' '!buildflags')
 install=mpv.install
 source=("$pkgname-$pkgver.tar.gz::https://github.com/mpv-player/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('7d31217ba8572f364fcea2955733f821374ae6d8c6d8f22f8bc63c44c0400bdc')
+sha256sums=('fc3619de0ede16fbb023ac72589090e8e77fd9d9e03a81adc728105d50ef38ba')
 
 prepare() {
   cd ${pkgname}-${pkgver}
@@ -36,7 +36,7 @@ prepare() {
 build() {
   cd ${pkgname}-${pkgver}
 
-  [[ $CARCH == "armv7h" ]] && CFLAGS+=" -fPIC" && CXXFLAGS+=" -fPIC"
+  [[ $CARCH == "armv7h" || $CARCH == "aarch64" ]] && CFLAGS+=" -fPIC" && CXXFLAGS+=" -fPIC"
 
   ./waf configure --prefix=/usr \
     --confdir=/etc/mpv \
