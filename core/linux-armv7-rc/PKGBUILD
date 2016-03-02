@@ -13,7 +13,7 @@ _srcname=linux-${_rcver}-rc${_rcrel}
 _kernelname=${pkgbase#linux}
 _desc="ARMv7 multi-platform (release candidate)"
 pkgver=${_rcver}.rc${_rcrel}
-pkgrel=1
+pkgrel=2
 arch=('armv7h')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -58,7 +58,7 @@ md5sums=('e6f61000bdcc34ace5a760bc5a4af858'
          '7309ebba9c3f551ccd71196a439eb9f8'
          'f5be9af61fc268dca3eb79d16b6ef87f'
          '1730f107ecc1f7f311055fdfbac75236'
-         '3a339ae113c5f08a42a71fd6925c446e'
+         '77402f0730462d77266ec25b923d5f91'
          '1813b39074d01af6548951764a0f6444'
          '4f2379ed84258050edb858ee8d281678'
          '61c5ff73c136ed07a7aadbf58db3d96a'
