@@ -8,13 +8,13 @@
 highmem=1
 
 pkgname=webkit2gtk
-pkgver=2.10.7
+pkgver=2.10.9
 pkgrel=1
 pkgdesc="GTK+ Web content engine library"
 arch=('i686' 'x86_64')
 url="http://webkitgtk.org/"
 license=('custom')
-depends=('libxt' 'libxslt' 'enchant' 'geoclue2' 'gst-plugins-base-libs'
+depends=('libxt' 'libxslt' 'enchant' 'geoclue2' 'gst-plugins-base-libs' 'gst-plugins-bad'
 	 'libsecret' 'libwebp' 'harfbuzz-icu' 'gtk3' 'libnotify' 'hyphen')
 makedepends=('gtk2' 'gperf' 'gobject-introspection' 'ruby' 'gtk-doc' 'cmake' 'python')
 optdepends=('gtk2: Netscape plugin support'
@@ -23,7 +23,7 @@ optdepends=('gtk2: Netscape plugin support'
             'gst-libav: nonfree media decoding')
 options=('!emptydirs')
 source=(http://webkitgtk.org/releases/webkitgtk-${pkgver}.tar.xz)
-sha256sums=('990d62c82ed6dede31a6ff0a82d847f16b812842ff3e1093d17113627652864e')
+sha256sums=('bbb18d741780b1b7fa284beb9a97361ac57cda2e42bad2ae2fcdbf797919e969')
 
 prepare() {
   mkdir build
