@@ -32,11 +32,11 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         '0007-set-default-cubietruck-led-triggers.patch'
         '0008-USB-armory-support.patch'
         '0009-drm-exynos-fimd-fix-broken-dp_clock-control.patch'
-	'0010-tegra124-nyan-big-compat-strings.patch'
-	'0011-tegra124-nyan-dtsi-fixes.patch'
-	'0012-tegra-max-correct-headphone-detect.patch'
-	'0014-tegra124-set-long-ram-code.patch'
-	'0015-tegra124-nyan-ramcode-0-4-timings.patch'
+	'tegra124-nyan-big-compat-strings.patch'
+	'tegra124-nyan-dtsi-fixes.patch'
+	'AsoC-tegra_max98090-honor-headphone-mic-detect-GPIO-.patch'
+	'tegra124-set-long-ram-code.patch'
+	'tegra124-nyan-ramcode-0-4-timings.patch'
         'config'
         'cmdline'
         'kernel.its'
@@ -55,7 +55,7 @@ md5sums=('cd51c84264c7d17035b08c3307fe12fe'
          'ca2c19f4ecf593dd6fccd7d23e9a6efc'
          'efc1c989bc2fddc757b89c202f325540'
          'b3403eca4aada539875023cd3e4fa75b'
-         '5f90572f53e43653e9d956bdb3bff6d5'
+         '48ee7e89aa92c2c981b374b86f1d760f'
          'f5be9af61fc268dca3eb79d16b6ef87f'
          '1730f107ecc1f7f311055fdfbac75236'
          '7a869deeec79769ae8a90f126a92e7d4'
@@ -85,11 +85,11 @@ prepare() {
   git apply ../0009-drm-exynos-fimd-fix-broken-dp_clock-control.patch
 
   # Nyan patches
-  patch -p1 < ../0010-tegra124-nyan-big-compat-strings.patch
-  patch -p1 < ../0011-tegra124-nyan-dtsi-fixes.patch
-  patch -p1 < ../0012-tegra-max-correct-headphone-detect.patch
-  patch -p1 < ../0014-tegra124-set-long-ram-code.patch
-  patch -p1 < ../0015-tegra124-nyan-ramcode-0-4-timings.patch
+  patch -p1 < ../tegra124-nyan-big-compat-strings.patch
+  patch -p1 < ../tegra124-nyan-dtsi-fixes.patch
+  patch -p1 < ../AsoC-tegra_max98090-honor-headphone-mic-detect-GPIO-.patch
+  patch -p1 < ../tegra124-set-long-ram-code.patch
+  patch -p1 < ../tegra124-nyan-ramcode-0-4-timings.patch
 
   cat "${srcdir}/config" > ./.config
 
