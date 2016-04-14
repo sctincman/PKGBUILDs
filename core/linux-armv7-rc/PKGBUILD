@@ -4,7 +4,7 @@
 buildarch=4
 
 _rcver=4.6
-_rcrel=2
+_rcrel=3
 _rcnrel=armv7-x0
 
 pkgbase=linux-armv7-rc
@@ -42,8 +42,8 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'kernel.its'
         'kernel.keyblock'
         'kernel_data_key.vbprivk')
-md5sums=('d13f04725958025e30e0f65a9f102e88'
-         'c1c653487392bf69e3163f493a39aeca'
+md5sums=('ea20687059ca62d66d2faab8469ab848'
+         '028fb9603da833f4a6cd5e2c9d350766'
          'fcf612f5a71f3c96d0e574d415cebd14'
          'fad932a4bc1da070b64c06b003405b70'
          '55697205d01f197cbb0a204f1fbc11a7'
@@ -58,7 +58,7 @@ md5sums=('d13f04725958025e30e0f65a9f102e88'
          '48ee7e89aa92c2c981b374b86f1d760f'
          'f5be9af61fc268dca3eb79d16b6ef87f'
          '1730f107ecc1f7f311055fdfbac75236'
-         'd30a148fecce6f85c1868102f063e2d3'
+         'fa2b2204f2d86e710cad6056874e7e24'
          '74c8499f82dccced141849cb0a9d7574'
          '4f2379ed84258050edb858ee8d281678'
          '61c5ff73c136ed07a7aadbf58db3d96a'
