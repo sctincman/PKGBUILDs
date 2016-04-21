@@ -1,0 +1,208 @@
+diff --git a/hw/xfree86/drivers/modesetting/drmmode_display.c b/hw/xfree86/drivers/modesetting/drmmode_display.c
+index f573a27..28d663c 100644
+--- a/hw/xfree86/drivers/modesetting/drmmode_display.c
++++ b/hw/xfree86/drivers/modesetting/drmmode_display.c
+@@ -532,7 +532,7 @@ drmmode_set_cursor_position(xf86CrtcPtr crtc, int x, int y)
+     drmModeMoveCursor(drmmode->fd, drmmode_crtc->mode_crtc->crtc_id, x, y);
+ }
+ 
+-static void
++static Bool
+ drmmode_set_cursor(xf86CrtcPtr crtc)
+ {
+     drmmode_crtc_private_ptr drmmode_crtc = crtc->driver_private;
+@@ -551,7 +551,7 @@ drmmode_set_cursor(xf86CrtcPtr crtc)
+                               handle, ms->cursor_width, ms->cursor_height,
+                               cursor->bits->xhot, cursor->bits->yhot);
+         if (!ret)
+-            return;
++            return TRUE;
+         if (ret == -EINVAL)
+             use_set_cursor2 = FALSE;
+     }
+@@ -566,7 +566,10 @@ drmmode_set_cursor(xf86CrtcPtr crtc)
+         cursor_info->MaxWidth = cursor_info->MaxHeight = 0;
+         drmmode_crtc->drmmode->sw_cursor = TRUE;
+         /* fallback to swcursor */
++	return FALSE;
+     }
++
++    return TRUE;
+ }
+ 
+ static void
+@@ -599,12 +602,12 @@ drmmode_hide_cursor(xf86CrtcPtr crtc)
+                      ms->cursor_width, ms->cursor_height);
+ }
+ 
+-static void
+-drmmode_show_cursor(xf86CrtcPtr crtc)
++static Bool
++drmmode_show_cursor_check(xf86CrtcPtr crtc)
+ {
+     drmmode_crtc_private_ptr drmmode_crtc = crtc->driver_private;
+     drmmode_crtc->cursor_up = TRUE;
+-    drmmode_set_cursor(crtc);
++    return drmmode_set_cursor(crtc);
+ }
+ 
+ static void
+@@ -844,7 +847,7 @@ static const xf86CrtcFuncsRec drmmode_crtc_funcs = {
+     .set_mode_major = drmmode_set_mode_major,
+     .set_cursor_colors = drmmode_set_cursor_colors,
+     .set_cursor_position = drmmode_set_cursor_position,
+-    .show_cursor = drmmode_show_cursor,
++    .show_cursor_check = drmmode_show_cursor_check,
+     .hide_cursor = drmmode_hide_cursor,
+     .load_cursor_argb = drmmode_load_cursor_argb,
+ 
+diff --git a/hw/xfree86/modes/xf86Crtc.h b/hw/xfree86/modes/xf86Crtc.h
+index 8b01608..4bc4d6f 100644
+--- a/hw/xfree86/modes/xf86Crtc.h
++++ b/hw/xfree86/modes/xf86Crtc.h
+@@ -187,6 +187,8 @@ typedef struct _xf86CrtcFuncs {
+      */
+     void
+      (*show_cursor) (xf86CrtcPtr crtc);
++    Bool
++     (*show_cursor_check) (xf86CrtcPtr crtc);
+ 
+     /**
+      * Hide cursor
+@@ -982,6 +984,8 @@ extern _X_EXPORT void
+  */
+ extern _X_EXPORT void
+  xf86_show_cursors(ScrnInfoPtr scrn);
++extern _X_EXPORT Bool
++ xf86_show_cursors_check(ScrnInfoPtr scrn);
+ 
+ /**
+  * Called by the driver to turn cursors off
+diff --git a/hw/xfree86/modes/xf86Cursors.c b/hw/xfree86/modes/xf86Cursors.c
+index 5df1ab7..2ba150c 100644
+--- a/hw/xfree86/modes/xf86Cursors.c
++++ b/hw/xfree86/modes/xf86Cursors.c
+@@ -333,17 +333,26 @@ xf86_hide_cursors(ScrnInfoPtr scrn)
+     }
+ }
+ 
+-static void
++static Bool
+ xf86_crtc_show_cursor(xf86CrtcPtr crtc)
+ {
+-    if (!crtc->cursor_shown && crtc->cursor_in_range) {
+-        crtc->funcs->show_cursor(crtc);
+-        crtc->cursor_shown = TRUE;
++    if (!crtc->cursor_in_range)
++        return TRUE;
++
++    if (!crtc->cursor_shown) {
++        if (crtc->funcs->show_cursor_check) {
++            crtc->cursor_shown = crtc->funcs->show_cursor_check(crtc);
++        } else {
++            crtc->funcs->show_cursor(crtc);
++            crtc->cursor_shown = TRUE;
++        }
+     }
++
++    return crtc->cursor_shown;
+ }
+ 
+-void
+-xf86_show_cursors(ScrnInfoPtr scrn)
++Bool
++xf86_show_cursors_check(ScrnInfoPtr scrn)
+ {
+     xf86CrtcConfigPtr xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
+     int c;
+@@ -352,9 +361,17 @@ xf86_show_cursors(ScrnInfoPtr scrn)
+     for (c = 0; c < xf86_config->num_crtc; c++) {
+         xf86CrtcPtr crtc = xf86_config->crtc[c];
+ 
+-        if (crtc->enabled)
+-            xf86_crtc_show_cursor(crtc);
++        if (crtc->enabled && !xf86_crtc_show_cursor(crtc))
++            return FALSE;
+     }
++
++    return TRUE;
++}
++
++void
++xf86_show_cursors(ScrnInfoPtr scrn)
++{
++    xf86_show_cursors_check(scrn);
+ }
+ 
+ void
+@@ -631,7 +648,7 @@ xf86_cursors_init(ScreenPtr screen, int max_width, int max_height, int flags)
+     cursor_info->SetCursorPosition = xf86_set_cursor_position;
+     cursor_info->LoadCursorImageCheck = xf86_load_cursor_image;
+     cursor_info->HideCursor = xf86_hide_cursors;
+-    cursor_info->ShowCursor = xf86_show_cursors;
++    cursor_info->ShowCursorCheck = xf86_show_cursors_check;
+     cursor_info->UseHWCursor = xf86_use_hw_cursor;
+     if (flags & HARDWARE_CURSOR_ARGB) {
+         cursor_info->UseHWCursorARGB = xf86_use_hw_cursor_argb;
+diff --git a/hw/xfree86/ramdac/xf86Cursor.h b/hw/xfree86/ramdac/xf86Cursor.h
+index 6e88240..a1afb1c 100644
+--- a/hw/xfree86/ramdac/xf86Cursor.h
++++ b/hw/xfree86/ramdac/xf86Cursor.h
+@@ -16,6 +16,7 @@ typedef struct _xf86CursorInfoRec {
+     Bool (*LoadCursorImageCheck) (ScrnInfoPtr pScrn, unsigned char *bits);
+     void (*HideCursor) (ScrnInfoPtr pScrn);
+     void (*ShowCursor) (ScrnInfoPtr pScrn);
++    Bool (*ShowCursorCheck) (ScrnInfoPtr pScrn);
+     unsigned char *(*RealizeCursor) (struct _xf86CursorInfoRec *, CursorPtr);
+     Bool (*UseHWCursor) (ScreenPtr, CursorPtr);
+ 
+diff --git a/hw/xfree86/ramdac/xf86HWCurs.c b/hw/xfree86/ramdac/xf86HWCurs.c
+index 84febe0..458781c 100644
+--- a/hw/xfree86/ramdac/xf86HWCurs.c
++++ b/hw/xfree86/ramdac/xf86HWCurs.c
+@@ -89,7 +89,8 @@ xf86InitHardwareCursor(ScreenPtr pScreen, xf86CursorInfoPtr infoPtr)
+     if (!infoPtr->SetCursorPosition ||
+         !xf86DriverHasLoadCursorImage(infoPtr) ||
+         !infoPtr->HideCursor ||
+-        !infoPtr->ShowCursor || !infoPtr->SetCursorColors)
++        (!infoPtr->ShowCursor && !infoPtr->ShowCursorCheck) ||
++        !infoPtr->SetCursorColors)
+         return FALSE;
+ 
+     if (infoPtr->RealizeCursor) {
+@@ -119,6 +120,15 @@ xf86InitHardwareCursor(ScreenPtr pScreen, xf86CursorInfoPtr infoPtr)
+     return TRUE;
+ }
+ 
++static Bool
++xf86ShowCursor(xf86CursorInfoPtr infoPtr)
++{
++    if (*infoPtr->ShowCursorCheck)
++        return (*infoPtr->ShowCursorCheck) (infoPtr->pScrn);
++    (*infoPtr->ShowCursor) (infoPtr->pScrn);
++    return TRUE;
++}
++
+ Bool
+ xf86SetCursor(ScreenPtr pScreen, CursorPtr pCurs, int x, int y)
+ {
+@@ -161,8 +171,8 @@ xf86SetCursor(ScreenPtr pScreen, CursorPtr pCurs, int x, int y)
+ 
+     (*infoPtr->SetCursorPosition) (infoPtr->pScrn, x, y);
+ 
+-    (*infoPtr->ShowCursor) (infoPtr->pScrn);
+-    return TRUE;
++    return xf86ShowCursor(infoPtr);
++
+ }
+ 
+ void
+@@ -184,7 +194,7 @@ xf86SetTransparentCursor(ScreenPtr pScreen)
+         xf86DriverLoadCursorImage (infoPtr,
+                                    ScreenPriv->transparentData);
+ 
+-    (*infoPtr->ShowCursor) (infoPtr->pScrn);
++    xf86ShowCursor(infoPtr);
+ }
+ 
+ void

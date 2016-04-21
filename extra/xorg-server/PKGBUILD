@@ -20,7 +20,8 @@ makedepends=('pixman' 'libx11' 'mesa' 'mesa-libgl' 'xf86driproto' 'xcmiscproto' 
 source=(${url}/releases/individual/xserver/${pkgbase}-${pkgver}.tar.bz2{,.sig}
         xvfb-run
         xvfb-run.1
-	hack-tegra-support.patch)
+	hack-tegra-support.patch
+	sw-cursor-fallback.patch)
 validpgpkeys=('7B27A3F1A6E18CD9588B4AE8310180050905E40C'
               'C383B778255613DFDB409D91DB221A6900000011'
               'DD38563A8A8224537D1F90E45B8A2D50A0ECD0D3')
@@ -28,12 +29,14 @@ sha256sums=('ea739c22517cdbe2b5f7c0a5fd05fe8a10ac0629003e71c0c7862f4bb60142cd'
             'SKIP'
             'ff0156309470fc1d378fd2e104338020a884295e285972cc88e250e031cc35b9'
             '2460adccd3362fefd4cdc5f1c70f332d7b578091fb9167bf88b5f91265bbd776'
-	    '5c6b827a13530883d1a327987a44f4a8d1cf47d8b54564131bee0f8081e60093')
+	    '5c6b827a13530883d1a327987a44f4a8d1cf47d8b54564131bee0f8081e60093'
+	    'c01b5fb1625da8949073d16797741e7ccd47dc8ed616a73b2e661e12347dfb29')
 
 prepare() {
       cd "${pkgbase}-${pkgver}"
 
-      git apply ../hack-tegra-support.patch
+      patch -p1 < ../hack-tegra-support.patch
+      patch -p1 < ../sw-cursor-fallback.patch
 }
 
 build() {
