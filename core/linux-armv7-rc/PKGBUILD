@@ -4,8 +4,8 @@
 buildarch=4
 
 _rcver=4.6
-_rcrel=3
-_rcnrel=armv7-x0
+_rcrel=4
+_rcnrel=armv7-x1
 
 pkgbase=linux-armv7-rc
 #_srcname=linux-4.$((${_rcver##*.}-1))
@@ -31,7 +31,6 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         '0006-ARM-TLV320AIC23-SoC-Audio-Codec-Fix-errors-reported-.patch'
         '0007-set-default-cubietruck-led-triggers.patch'
         '0008-USB-armory-support.patch'
-        '0009-drm-exynos-fimd-fix-broken-dp_clock-control.patch'
 	'tegra124-nyan-big-compat-strings.patch'
 	'tegra124-nyan-dtsi-fixes.patch'
 	'AsoC-tegra_max98090-honor-headphone-mic-detect-GPIO-.patch'
@@ -42,23 +41,22 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'kernel.its'
         'kernel.keyblock'
         'kernel_data_key.vbprivk')
-md5sums=('ea20687059ca62d66d2faab8469ab848'
-         '028fb9603da833f4a6cd5e2c9d350766'
-         'fcf612f5a71f3c96d0e574d415cebd14'
-         'fad932a4bc1da070b64c06b003405b70'
-         '55697205d01f197cbb0a204f1fbc11a7'
-         '10be278b083da9d6ee197215017a2c11'
-         '5c96b8a10bd59f536e77c7392fef3936'
-         '8bae10b25116820b0f7492f028386c3c'
-         '426888e80a5c62276e76dad08ece3a8d'
-         '1e4daa74081b645cd9d0508a04d4ad44'
-         'ca2c19f4ecf593dd6fccd7d23e9a6efc'
+md5sums=('f45f41febb539a3101ab575a3a039144'
+         '8e4267397cb814ca85f99cfc2602cd3a'
+         'c025cf3894fc3662c49aae80febd85e8'
+         'f0a2c6c5c9d185ef2c324639cc5c5ccc'
+         'cb3bd7ef06f5695e27e3d7a7ec99ab4f'
+         'a67db6ac12f75402b1f7a6fe556fa738'
+         'a5d2d5ef084a9482220ffd5978644a5a'
+         '252b65cccacf013e4ec13e69bba2e543'
+         '91a804ea2c4d44b08a5a05354f86f398'
+         '48b236d1156a8a0dc8fd6e726a5ade0e'
          'efc1c989bc2fddc757b89c202f325540'
          'b3403eca4aada539875023cd3e4fa75b'
          '48ee7e89aa92c2c981b374b86f1d760f'
          'f5be9af61fc268dca3eb79d16b6ef87f'
          '1730f107ecc1f7f311055fdfbac75236'
-         'fa2b2204f2d86e710cad6056874e7e24'
+         'aac42591ee918638b117b2679029e96f'
          '74c8499f82dccced141849cb0a9d7574'
          '4f2379ed84258050edb858ee8d281678'
          '61c5ff73c136ed07a7aadbf58db3d96a'
@@ -82,7 +80,6 @@ prepare() {
   git apply ../0006-ARM-TLV320AIC23-SoC-Audio-Codec-Fix-errors-reported-.patch
   git apply ../0007-set-default-cubietruck-led-triggers.patch
   git apply ../0008-USB-armory-support.patch
-  git apply ../0009-drm-exynos-fimd-fix-broken-dp_clock-control.patch
 
   # Nyan patches
   patch -p1 < ../tegra124-nyan-big-compat-strings.patch
