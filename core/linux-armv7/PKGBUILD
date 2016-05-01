@@ -8,7 +8,7 @@ _srcname=linux-4.5
 _kernelname=${pkgbase#linux}
 _desc="ARMv7 multi-platform"
 pkgver=4.5.2
-pkgrel=1
+pkgrel=2
 rcnrel=armv7-x2
 arch=('armv7h')
 url="http://www.kernel.org/"
@@ -58,7 +58,7 @@ md5sums=('a60d48eee08ec0536d5efb17ca819aef'
          '1730f107ecc1f7f311055fdfbac75236'
          'f5be9af61fc268dca3eb79d16b6ef87f'
          '7309ebba9c3f551ccd71196a439eb9f8'
-         '28ba84ebc563fa75b49b5337683a698a'
+         '767f5e5cfd4167a3fd7672d5a6d7575c'
          'f2bca096963196a258d98b1ed1ca5ba2'
          'cb2cdd34d6ea18a1411045413d8d18ef'
          '61c5ff73c136ed07a7aadbf58db3d96a'

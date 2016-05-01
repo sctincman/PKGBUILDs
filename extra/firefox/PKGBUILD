@@ -9,20 +9,19 @@
 highmem=1
 
 pkgname=firefox
-pkgver=45.0.2
-pkgrel=1
+pkgver=46.0
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://www.mozilla.org/firefox/"
 depends=('gtk3' 'gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
-         'dbus-glib' 'alsa-lib' 'ffmpeg' 'desktop-file-utils' 'hicolor-icon-theme'
+         'dbus-glib' 'alsa-lib' 'ffmpeg' 'desktop-file-utils'
          'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite' 'ttf-font')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake' 'gconf'
              'xorg-server-xvfb' 'libpulse' 'inetutils')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'upower: Battery API')
-install=firefox.install
 options=('!emptydirs' '!makeflags')
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
         mozconfig
@@ -30,27 +29,21 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
         firefox-install-dir.patch
         vendor.js
         firefox-symbolic.svg
-        firefox-fixed-loading-icon.png
         firefox-gtk3-20.patch
         no-libnotify.patch
         no-neon.patch
-        7c2671907288.patch::https://hg.mozilla.org/mozilla-central/raw-rev/7c2671907288
-        b3d2424a348e.patch::https://hg.mozilla.org/mozilla-central/raw-rev/b3d2424a348e
         69f237c2cf91.patch::https://hg.mozilla.org/mozilla-central/raw-rev/69f237c2cf91
         a5919256fd5c.patch::https://hg.mozilla.org/mozilla-central/raw-rev/a5919256fd5c
         aarch64-no-static-sizes.patch)
-sha256sums=('a6b09bac0390d4e48b752026ec1aaa934332dee31fb3ff3ca59f8209f4217a53'
-            '2e355a477f1df792cd7f9d1e3a56030543e0cf2d09051dd293ba495a7edb54fd'
-            '9011ffcd6eb2868d0363c216d0b28faf64bb746e8de200726a6ca7013a99106e'
+sha256sums=('b35aa05162362d73cd308066adca207f7aa40ceae10931fa4819371df6c4f8bf'
+            '67e02cc10d14bd7677c84a56b3331d4387c3b7b99fe67cbf517f1bae4c4ebf63'
             'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
-            '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
+            '440c3e22d98ecf8c44dcedbe90bbb302da3a059e3fc3fba205d89f0eca329cbf'
             'e4ebdd14096d177d264a7993dbd5df46463605ff45f783732c26d30b9caa53a7'
             '6d0c1c9ca28b20d206ce24ca84f4d4e3f5d062a2e9cb7445fcb6c2cfea959b4a'
-            '20bdcf5424b8a3338e57fb03b9a9af03c820f23aef915b09d934b8c252ccd72a'
-            '3c538925a739484eef3bf663e44e1876ad27b01755c001b81f9e3ef30f329b08'
             '32e116fcd3ede2b4074fa169453216ca8ed71f93e67fbdc78e14c308b3f2a99c'
             'fb5f84100e01f127160a82797860cb0e04bb6da860a8343963ed45c44740ef0e'
             'b73d92a6e96b84464e1f675f8cac730a12cfc9701318a3a9ba46b3d34bfe7cb4')
@@ -99,21 +92,10 @@ prepare() {
   # WebRTC build tries to execute "python" and expects Python 2
   ln -s /usr/bin/python2 "$srcdir/path/python"
 
-  # configure script misdetects the preprocessor without an optimization level
-  # https://bugs.archlinux.org/task/34644
-  sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
-
-  # Fix tab loading icon (doesn't work with libpng 1.6)
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=841734
-  cp "$srcdir/firefox-fixed-loading-icon.png" \
-    browser/themes/linux/tabbrowser/loading.png
-
   [[ $CARCH == "aarch64" ]] && echo "ac_add_options --disable-gold" >> .mozconfig
   patch -Np0 -i ../no-neon.patch
 
   # AArch64 patches
-  patch -p1 -i ../7c2671907288.patch
-  patch -p1 -i ../b3d2424a348e.patch
   patch -p1 -i ../69f237c2cf91.patch
   patch -p1 -i ../a5919256fd5c.patch
   patch -p0 -i ../aarch64-no-static-sizes.patch
@@ -122,8 +104,10 @@ prepare() {
 build() {
   cd $pkgname-$pkgver
 
+  # _FORTIFY_SOURCE causes configure failures
+  CPPFLAGS+=" -O2"
+
   export PATH="$srcdir/path:$PATH"
-  export PYTHON="/usr/bin/python2"
 
   # Do PGO
   xvfb-run -a -s "-extension GLX -screen 0 1280x1024x24" \
