@@ -31,7 +31,6 @@ source=("http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
 	'tegra124-nyan-dtsi-fixes.patch'
 	'tegra124-nyan-ramcode-0-4-timings.patch'
 	'tegra124-set-long-ram-code.patch'
-	'bq24735-charger-fixes.patch'
         'config'
         'cmdline'
         'kernel.its'
@@ -53,7 +52,6 @@ md5sums=('d2927020e24a76da4ab482a8bc3e9ef3'
          'b3403eca4aada539875023cd3e4fa75b'
          '1730f107ecc1f7f311055fdfbac75236'
          'f5be9af61fc268dca3eb79d16b6ef87f'
-         '7309ebba9c3f551ccd71196a439eb9f8'
          '98322d240cb731fb4ce341bb8a35e8f8'
          'f2bca096963196a258d98b1ed1ca5ba2'
          '4f2379ed84258050edb858ee8d281678'
@@ -85,7 +83,6 @@ prepare() {
   patch -p1 < ../tegra124-nyan-dtsi-fixes.patch
   patch -p1 < ../tegra124-nyan-ramcode-0-4-timings.patch
   patch -p1 < ../tegra124-set-long-ram-code.patch
-  patch -p1 < ../bq24735-charger-fixes.patch
 
   cat "${srcdir}/config" > ./.config
 
