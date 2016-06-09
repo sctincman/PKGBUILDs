@@ -3,9 +3,9 @@
 
 buildarch=4
 
-_rcver=4.6
-_rcrel=7
-_rcnrel=armv7-x2
+_rcver=4.7
+_rcrel=2
+_rcnrel=armv7-x0
 
 pkgbase=linux-armv7-rc
 #_srcname=linux-4.$((${_rcver##*.}-1))
@@ -41,22 +41,22 @@ source=(#"http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'kernel.its'
         'kernel.keyblock'
         'kernel_data_key.vbprivk')
-md5sums=('b88b9b8efa0bf72f7550989712aaafd9'
-         'acdb79fe6cace0dd7673084aab5ad1d8'
-         '1b4bb8c2a33606ede339e5661f0e7fb8'
-         '8e2d392b751e5cf1862f1472d0d7a992'
-         '56ce0f700dcee0584183452d15c96b58'
-         '3a66481fa1aabbff1ed8a947d5aadc99'
-         '4864a3dc1188c51d505034932adadf92'
-         '2f7506cf70805d688a880e19e2f3e20a'
-         '276e39a7d0ff9bac45607ef4d50e0ab9'
-         '1c76d22a3281e9539222ee242da5a7fb'
+md5sums=('687e3ff4f6be272e69cd1633d2955027'
+         '8c739cba64b00b4f1f48f2f2eed78d29'
+         'abf9fe78fae0ffd10b6db56670bbb0f1'
+         'cd9c5400cf4fcd261d19c472d61f7445'
+         '99bb48b1b02b3ace761633622a315d84'
+         '914e279e5fabedc2f2d1afb22ddd225c'
+         '2f4e6922546a4851abdefbfd89f12e00'
+         '6fdf2b5666d534f83eeec6b43c6838c3'
+         'e4ff8c1bcdeb833ca1f86802ef03bc35'
+         'e7e0c12b90941b30ef1f2f6fcda46bf0'
          'efc1c989bc2fddc757b89c202f325540'
          'b3403eca4aada539875023cd3e4fa75b'
          '48ee7e89aa92c2c981b374b86f1d760f'
          'f5be9af61fc268dca3eb79d16b6ef87f'
          '1730f107ecc1f7f311055fdfbac75236'
-         '29685cfcc4ecfe8222332a72a8dfdb30'
+         '2149dd5abd31448750f039ed3a539790'
          'f2bca096963196a258d98b1ed1ca5ba2'
          '4f2379ed84258050edb858ee8d281678'
          '61c5ff73c136ed07a7aadbf58db3d96a'
@@ -160,13 +160,11 @@ _package() {
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
   # remove the firmware
   rm -rf "${pkgdir}/lib/firmware"
-  # gzip -9 all modules to save 100MB of space
-  find "${pkgdir}" -name '*.ko' |xargs -P 2 -n 1 gzip -9
   # make room for external modules
-  ln -s "../extramodules-${_basekernel}-${_kernelname:-ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
+  ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
   # add real version for building modules and running depmod from post_install/upgrade
-  mkdir -p "${pkgdir}/lib/modules/extramodules-${_basekernel}-${_kernelname:-ARCH}"
-  echo "${_kernver}" > "${pkgdir}/lib/modules/extramodules-${_basekernel}-${_kernelname:-ARCH}/version"
+  mkdir -p "${pkgdir}/lib/modules/extramodules-${_basekernel}${_kernelname:--ARCH}"
+  echo "${_kernver}" > "${pkgdir}/lib/modules/extramodules-${_basekernel}${_kernelname:--ARCH}/version"
 
   # Now we call depmod...
   depmod -b "$pkgdir" -F System.map "$_kernver"
