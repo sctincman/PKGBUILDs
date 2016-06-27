@@ -7,8 +7,8 @@ pkgbase=linux-armv7
 _srcname=linux-4.6
 _kernelname=${pkgbase#linux}
 _desc="ARMv7 multi-platform"
-pkgver=4.6.0
-pkgrel=3
+pkgver=4.6.2
+pkgrel=1
 rcnrel=armv7-x4
 arch=('armv7h')
 url="http://www.kernel.org/"
@@ -16,7 +16,7 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
 options=('!strip')
 source=("http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
-        #"http://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
+        "http://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
         "http://rcn-ee.com/deb/sid-armhf/v${pkgver}-${rcnrel}/patch-${pkgver%.0}-${rcnrel}.diff.gz"
         '0001-ARM-atags-add-support-for-Marvell-s-u-boot.patch'
         '0002-ARM-atags-fdt-retrieve-MAC-addresses-from-Marvell-bo.patch'
@@ -37,7 +37,8 @@ source=("http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'kernel.keyblock'
         'kernel_data_key.vbprivk')
 md5sums=('d2927020e24a76da4ab482a8bc3e9ef3'
-         'a8596af2a59a5c2bceab959ffaff210b'
+         'c064bbe8108b8e5304f3db2130a96845'
+         'ac3d50d347405842e11ca8161d8ab621'
          '1b4bb8c2a33606ede339e5661f0e7fb8'
          '8e2d392b751e5cf1862f1472d0d7a992'
          '56ce0f700dcee0584183452d15c96b58'
@@ -51,7 +52,7 @@ md5sums=('d2927020e24a76da4ab482a8bc3e9ef3'
          'b3403eca4aada539875023cd3e4fa75b'
          '1730f107ecc1f7f311055fdfbac75236'
          'f5be9af61fc268dca3eb79d16b6ef87f'
-         '817be82910ce813471e15c036f75c8f6'
+         'bde38637919e9a0f8f69da25c691b329'
          'f2bca096963196a258d98b1ed1ca5ba2'
          '4f2379ed84258050edb858ee8d281678'
          '61c5ff73c136ed07a7aadbf58db3d96a'
@@ -61,7 +62,7 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   # add upstream patch
-  #git apply --whitespace=nowarn ../patch-${pkgver}
+  git apply --whitespace=nowarn ../patch-${pkgver}
 
   # RCN patch
   git apply ../patch-${pkgver%.0}-${rcnrel}.diff
