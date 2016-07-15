@@ -5,7 +5,7 @@
 pkgbase=xorg-server
 pkgname=('xorg-server' 'xorg-server-xephyr' 'xorg-server-xdmx' 'xorg-server-xvfb' 'xorg-server-xnest' 'xorg-server-xwayland' 'xorg-server-common' 'xorg-server-devel')
 pkgver=1.18.3
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 license=('custom')
 groups=('xorg')
@@ -22,7 +22,8 @@ source=(${url}/releases/individual/xserver/${pkgbase}-${pkgver}.tar.bz2{,.sig}
         xvfb-run.1
 	hack-tegra-support.patch
 	sw-cursor-fallback.patch
-	call-eglBindAPI-after-eglInitialize.patch)
+	call-eglBindAPI-after-eglInitialize.patch
+	xserver-dix-Work-around-non-premultiplied-ARGB-cursor-data.patch)
 validpgpkeys=('7B27A3F1A6E18CD9588B4AE8310180050905E40C'
               'C383B778255613DFDB409D91DB221A6900000011'
               'DD38563A8A8224537D1F90E45B8A2D50A0ECD0D3')
@@ -32,7 +33,8 @@ sha256sums=('ea739c22517cdbe2b5f7c0a5fd05fe8a10ac0629003e71c0c7862f4bb60142cd'
             '2460adccd3362fefd4cdc5f1c70f332d7b578091fb9167bf88b5f91265bbd776'
 	    '5c6b827a13530883d1a327987a44f4a8d1cf47d8b54564131bee0f8081e60093'
 	    'c01b5fb1625da8949073d16797741e7ccd47dc8ed616a73b2e661e12347dfb29'
-            '45fdc2a1241d458756c41a93c01846e04cc75f3c75f81f48b61533d08280918d')
+            '45fdc2a1241d458756c41a93c01846e04cc75f3c75f81f48b61533d08280918d'
+            'ecb0b1f73342e8c3de1563efcc812ac0235e2994d0343b392c1f51920510aa18')
 
 prepare() {
   cd "${pkgbase}-${pkgver}"
@@ -41,6 +43,9 @@ prepare() {
   patch -p1 < ../sw-cursor-fallback.patch
 
   patch -Np1 -i ../call-eglBindAPI-after-eglInitialize.patch
+
+  # fix broken cursor in games with mesa drivers
+  patch -Np1 -i ../xserver-dix-Work-around-non-premultiplied-ARGB-cursor-data.patch
 }
 
 build() {
