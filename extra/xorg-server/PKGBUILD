@@ -4,8 +4,8 @@
 
 pkgbase=xorg-server
 pkgname=('xorg-server' 'xorg-server-xephyr' 'xorg-server-xdmx' 'xorg-server-xvfb' 'xorg-server-xnest' 'xorg-server-xwayland' 'xorg-server-common' 'xorg-server-devel')
-pkgver=1.18.3
-pkgrel=3
+pkgver=1.18.4
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('custom')
 groups=('xorg')
@@ -18,34 +18,25 @@ makedepends=('pixman' 'libx11' 'mesa' 'mesa-libgl' 'xf86driproto' 'xcmiscproto' 
              'xcb-util' 'xcb-util-image' 'xcb-util-renderutil' 'xcb-util-wm' 'xcb-util-keysyms' 'dri3proto'
              'libxshmfence' 'libunwind')
 source=(${url}/releases/individual/xserver/${pkgbase}-${pkgver}.tar.bz2{,.sig}
-        xvfb-run
-        xvfb-run.1
 	hack-tegra-support.patch
 	sw-cursor-fallback.patch
-	call-eglBindAPI-after-eglInitialize.patch
-	xserver-dix-Work-around-non-premultiplied-ARGB-cursor-data.patch)
+        xvfb-run
+        xvfb-run.1)
 validpgpkeys=('7B27A3F1A6E18CD9588B4AE8310180050905E40C'
               'C383B778255613DFDB409D91DB221A6900000011'
               'DD38563A8A8224537D1F90E45B8A2D50A0ECD0D3')
-sha256sums=('ea739c22517cdbe2b5f7c0a5fd05fe8a10ac0629003e71c0c7862f4bb60142cd'
+sha256sums=('278459b2c31d61a15655d95a72fb79930c480a6bb8cf9226e48a07df8b1d31c8'
             'SKIP'
+	    '4c88424cee4b179653d3d91cb226caa71c2174c7b50b602495906b63bf6bb196'
+	    'f52838bf905353d44796c7e9f0312ebe2307bb01b9f35b1c8a7a5311343859c2'
             'ff0156309470fc1d378fd2e104338020a884295e285972cc88e250e031cc35b9'
-            '2460adccd3362fefd4cdc5f1c70f332d7b578091fb9167bf88b5f91265bbd776'
-	    '5c6b827a13530883d1a327987a44f4a8d1cf47d8b54564131bee0f8081e60093'
-	    'c01b5fb1625da8949073d16797741e7ccd47dc8ed616a73b2e661e12347dfb29'
-            '45fdc2a1241d458756c41a93c01846e04cc75f3c75f81f48b61533d08280918d'
-            'ecb0b1f73342e8c3de1563efcc812ac0235e2994d0343b392c1f51920510aa18')
+            '2460adccd3362fefd4cdc5f1c70f332d7b578091fb9167bf88b5f91265bbd776')
 
 prepare() {
   cd "${pkgbase}-${pkgver}"
 
   patch -p1 < ../hack-tegra-support.patch
   patch -p1 < ../sw-cursor-fallback.patch
-
-  patch -Np1 -i ../call-eglBindAPI-after-eglInitialize.patch
-
-  # fix broken cursor in games with mesa drivers
-  patch -Np1 -i ../xserver-dix-Work-around-non-premultiplied-ARGB-cursor-data.patch
 }
 
 build() {

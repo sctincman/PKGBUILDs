@@ -144,15 +144,6 @@ index 262e015..f573a27 100644
      }
  #endif
  
-@@ -355,7 +403,7 @@ drmmode_set_mode_major(xf86CrtcPtr crtc, DisplayModePtr mode,
-                            pScrn->virtualX, height,
-                            pScrn->depth, pScrn->bitsPerPixel,
-                            drmmode_bo_get_pitch(&drmmode->front_bo),
--                           drmmode_bo_get_handle(&drmmode->front_bo),
-+                           drmmode->front_bo.drm_handle,
-                            &drmmode->fb_id);
-         if (ret < 0) {
-             ErrorF("failed to add fb %d\n", ret);
 @@ -688,7 +736,7 @@ drmmode_shadow_allocate(xf86CrtcPtr crtc, int width, int height)
      ret = drmModeAddFB(drmmode->fd, width, height, crtc->scrn->depth,
                         crtc->scrn->bitsPerPixel,
