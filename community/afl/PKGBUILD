@@ -5,10 +5,10 @@
 #  - make with AFL_NO_X86=1
 
 pkgname=afl
-pkgver=2.19b
+pkgver=2.30b
 pkgrel=1
 pkgdesc='Security-oriented fuzzer using compile-time instrumentation and genetic algorithms'
-url="http://lcamtuf.coredump.cx/afl/"
+url='http://lcamtuf.coredump.cx/afl/'
 arch=('i686' 'x86_64')
 license=('Apache')
 depends=('glibc' 'bash')
@@ -21,7 +21,7 @@ provides=('american-fuzzy-lop')
 replaces=('american-fuzzy-lop')
 options=('!emptydirs' '!strip')
 source=(${pkgname}-${pkgver}.tgz::http://lcamtuf.coredump.cx/${pkgname}/releases/${pkgname}-${pkgver}.tgz)
-sha512sums=('07920ba8dcbdaebecc6f229cd3d6b0f84ddbfd586c0563a26953e84af57ae2b9339ddbd74991433829bbc54fc77f50cc70dc23a0cc81d6c0c2652891251c8875')
+sha512sums=('45c0afcb6e7873648ec213b9dfb0c8a708caa7e3dbc1db9f11e2dba74febfcd9391e49eb284c33b7f9f5ce24eb27e9dc5ed67a17c6ef2a5f377d1b8438d6ae06')
 
 build() {
   cd ${pkgname}-${pkgver}

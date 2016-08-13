@@ -2,7 +2,7 @@
 +++ b/arch/arm/boot/dts/tegra124-nyan-big-emc.dtsi	2016-01-30 13:19:05.904998621 -0700
 @@ -1,5 +1,77 @@
  / {
- 	clock@0,60006000 {
+ 	clock@60006000 {
 +		emc-timings-0 {
 +			nvidia,ram-code = <0>;
 +
@@ -156,7 +156,7 @@
 +
  	};
  
- 	emc@0,7001b000 {
+ 	emc@7001b000 {
 -		emc-timings-1 {
 -			nvidia,ram-code = <1>;
 +		emc-timings-0 {
@@ -4528,7 +4528,7 @@
 +		};
 +	};
 +
-+	memory-controller@0,70019000 {
++	memory-controller@70019000 {
 +		emc-timings-0 {
 +			nvidia,ram-code = <0>;
 +
@@ -5125,7 +5125,7 @@
  		};
 -	};
  
--	memory-controller@0,70019000 {
+-	memory-controller@70019000 {
 -		emc-timings-1 {
 -			nvidia,ram-code = <1>;
 +		emc-timings-4 {
