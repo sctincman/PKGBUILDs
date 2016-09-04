@@ -1,0 +1,108 @@
+# $Id$
+# Maintainer: Laurent Carlier <lordheavym@gmail.com>
+
+# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
+#  - use suffix=32 in packaging for 32-bit ARM architectures
+
+pkgbase=vulkan-tools
+pkgname=(vulkan-trace vulkan-extra-layers)
+pkgver=1.0.24.0
+pkgrel=1
+arch=(i686 x86_64)
+url="http://lunarg.com/"
+license=('custom')
+depends=()
+makedepends=(git cmake wget python-lxml libxcb imagemagick)
+source=("vulkanTools-sdk-${pkgver}::https://github.com/LunarG/VulkanTools/archive/sdk-${pkgver}.tar.gz"
+        'git://github.com/KhronosGroup/glslang.git#commit=81cd764b5ffc475bc73f1fb35f75fd1171bb2343'
+        'git://github.com/KhronosGroup/SPIRV-Tools.git#commit=923a4596b44831a07060df45caacb522613730c9'
+        'git://github.com/KhronosGroup/SPIRV-Headers#commit=33d41376d378761ed3a4c791fc4b647761897f26')
+sha256sums=('e7319a00d5f74e8e1995b29a9f6cb5b8ef4d6ff240ab10cd372429f7ef043a7a'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+
+build() {
+  cd "${srcdir}/VulkanTools-sdk-${pkgver}"
+
+  # reproduce some of the update_external_sources.sh script
+  rm -rf external && mkdir external && cd external
+  git clone ${srcdir}/glslang
+  git clone ${srcdir}/SPIRV-Tools spirv-tools
+  pushd spirv-tools
+  git clone ${srcdir}/SPIRV-Headers external/spirv-headers
+  popd
+  
+  pushd glslang
+  rm -rf build ; mkdir build ; cd build
+  cmake -D CMAKE_BUILD_TYPE=Release ..
+  cmake -D CMAKE_BUILD_TYPE=Release ..
+  make
+  make install
+  popd
+  
+  pushd spirv-tools
+  rm -rf build ; mkdir build ; cd build
+  cmake -D CMAKE_BUILD_TYPE=Release ..
+  make
+  popd
+
+  cd "${srcdir}/VulkanTools-sdk-${pkgver}"
+
+  rm -rf build ; mkdir build ; cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_SYSCONFDIR=/etc \
+    -DINCLUDE_INSTALL_DIR=/usr/include \
+    -DLIB_INSTALL_DIR=/usr/lib \
+    -DCMAKE_INSTALL_DATADIR=/usr/share \
+    -DCMAKE_SKIP_RPATH=True \
+    -DBUILD_ICD=OFF \
+    -DBUILD_TESTS=OFF \
+    -DBUILD_DEMOS=OFF \
+    -DCMAKE_BUILD_TYPE=Release \
+    ..
+  make
+}
+
+package_vulkan-trace() {
+  pkgdesc="Vulkan tracing and replaying tools"
+  depends=(vulkan-icd-loader libxcb gcc-libs)
+  groups=('vulkan-devel')
+  
+  cd "${srcdir}/VulkanTools-sdk-${pkgver}"
+  
+  [[ $CARCH == i686 || $CARCH == arm || $CARCH == armv6h || $CARCH == armv7h ]] && suffix=32
+
+  install -dm755 ${pkgdir}/usr/{bin,lib}
+  install -dm755 ${pkgdir}/usr/share/licenses/${pkgname}
+  
+  install -m755 build/vktrace/{vkreplay,vktrace}${suffix} ${pkgdir}/usr/bin/
+  install -m755 build/vktrace/libVkLayer_vktrace_layer${suffix}.so ${pkgdir}/usr/lib/
+ 
+  install -m644 LICENSE.txt "${pkgdir}"/usr/share/licenses/${pkgname}/
+}
+
+package_vulkan-extra-layers() {
+  pkgdesc="Extra layers for Vulkan development"
+  depends=(vulkan-validation-layers)
+  groups=('vulkan-devel')
+  
+  cd "${srcdir}/VulkanTools-sdk-${pkgver}"
+
+  install -dm755 ${pkgdir}/usr/lib
+  install -dm755 ${pkgdir}/usr/share/licenses/${pkgname}
+  install -dm755 ${pkgdir}/usr/share/vulkan/explicit_layer.d
+ 
+  install -m644 build/layersvt/*.so ${pkgdir}/usr/lib
+
+  # fix library paths  
+  for i in layersvt/linux/*.json ; do 
+    sed 's@./@@' $i > ${pkgdir}/usr/share/vulkan/explicit_layer.d/$(basename $i)
+  done
+
+  # this json file is really broken! see FS#50575
+  rm -v ${pkgdir}/usr/share/vulkan/explicit_layer.d/VkLayer_basic_implicit.json
+
+  install -m644 LICENSE.txt "${pkgdir}"/usr/share/licenses/${pkgname}/
+}
